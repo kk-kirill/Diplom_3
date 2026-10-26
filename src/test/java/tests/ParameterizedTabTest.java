@@ -1,6 +1,8 @@
 package tests;
 
 import driver.DriverFactory;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +33,8 @@ public class ParameterizedTabTest {
         };
     }
 
+    @DisplayName("Переключение вкладок конструктора")
+    @Description("Проверяем, что при клике на вкладку она становится активной")
     @Test
     public void switchConstructorTab_showsActiveTab() {
         WebDriver driver = driverFactory.getDriver();

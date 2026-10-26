@@ -1,6 +1,8 @@
 package tests;
 
 import driver.DriverFactory;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -15,8 +17,10 @@ public class RegistrationIncorrectPasswordTest {
     @Rule
     public DriverFactory driverFactory = new DriverFactory();
 
+    @DisplayName("Регистрация с некорректным паролем")
+    @Description("Проверяем, что появляется ошибка при пароле короче 6 символов")
     @Test
-    public void RegistrationUser() {
+    public void registrationWithShortPasswordTest() {
         WebDriver driver = driverFactory.getDriver();
         MainPage mainPage = new MainPage(driver);
         mainPage.openStellarBurger();

@@ -1,6 +1,12 @@
 package tests;
 
+import api.UserApi;
 import driver.DriverFactory;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
+import io.restassured.response.Response;
+import model.UserModel;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -15,21 +21,33 @@ public class RegistrationUserTest {
     @Rule
     public DriverFactory driverFactory = new DriverFactory();
 
+    private UserApi userApi = new UserApi();
+    private String email;
+    private String password = "123456";
+
+    @After
+    public void tearDown() {
+        UserModel user = new UserModel(email, password, "Иван");
+        Response response = userApi.login(user);
+        String accessToken = response.then().extract().path("accessToken");
+        if (accessToken != null) {
+            userApi.delete(accessToken);
+        }
+    }
+
     @Test
-    public void RegistrationUser() {
+    public void successfulRegistrationTest() {
         WebDriver driver = driverFactory.getDriver();
         MainPage mainPage = new MainPage(driver);
         mainPage.openStellarBurger();
-        LoginPage loginPage;
-        loginPage = mainPage.clickPersonalCabinetButton();
-        RegisterPage registerPage;
-        registerPage = loginPage.clickRegisterButton();
+        LoginPage loginPage = mainPage.clickPersonalCabinetButton();
+        RegisterPage registerPage = loginPage.clickRegisterButton();
         registerPage.enterUserName("Иван");
-        String email = "test" + System.currentTimeMillis() + "@yandex.ru";
+        email = "test" + System.currentTimeMillis() + "@yandex.ru";
         registerPage.enterUserEmail(email);
-        registerPage.enterUserPassword("123456");
+        registerPage.enterUserPassword(password);
         registerPage.clickRegisterButton();
-        assertTrue("После регистрации должна открыться станица авторизации",
+        assertTrue("После регистрации должна открыться страница авторизации",
                 loginPage.isLoginPageOpened());
     }
 }

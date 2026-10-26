@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -25,11 +26,13 @@ public class MainPage {
     private final String TAB_XPATH = "//div[contains(@class,'tab_tab__')][.//span[text()='%s']]";
 
     // метод для открытия сайта
+    @Step("Открыть главную страницу Stellar Burgers")
     public void openStellarBurger() {
         driver.get("https://qa-stellarburgers.education-services.ru/");
     }
 
     // методы для кнопок
+    @Step("Нажать кнопку «Войти в аккаунт»")
     public LoginPage clickLoginAccountButton() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(LOGIN_ACCOUNT_BUTTON))
@@ -37,6 +40,7 @@ public class MainPage {
         return new LoginPage(driver);
     }
 
+    @Step("Нажать кнопку «Личный кабинет»")
     public LoginPage clickPersonalCabinetButton() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(PERSONAL_CABINET_BUTTON))
@@ -45,6 +49,7 @@ public class MainPage {
     }
 
     // методы для вкладок
+    @Step("Переключить вкладку конструктора: {tabName}")
     public void clickConstructorTab(String tabName) {
         WebElement tab = new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(
@@ -52,8 +57,17 @@ public class MainPage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tab);
     }
 
+    // методы для проверок
+    @Step("Проверить, что вкладка {tabName} активна")
     public boolean isTabActive(String tabName) {
         return driver.findElement(By.xpath(String.format(TAB_XPATH, tabName)))
                 .getAttribute("class").contains("tab_tab_type_current");
+    }
+
+    @Step("Проверить, что открыта главная страница")
+    public boolean isMainPageOpened() {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.urlContains("qa-stellarburgers.education-services.ru"));
+        return true;
     }
 }
